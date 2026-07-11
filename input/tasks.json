@@ -1,0 +1,18 @@
+[
+    {
+        "task_id": "t1",
+        "prompt": "What is the capital of France?"
+    },
+    {
+        "task_id": "t2",
+        "prompt": "Summarize Artificial Intelligence in one sentence."
+    },
+    {
+        "task_id": "t3",
+        "prompt": "Write a Python function to reverse a linked list."
+    },
+    {
+        "task_id": "t4",
+        "prompt": "Solve the quadratic equation x²-5x+6=0"
+    }
+]
