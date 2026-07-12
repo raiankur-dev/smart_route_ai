@@ -4,8 +4,17 @@ from openai import OpenAI
 
 load_dotenv()
 
+import os
+import streamlit as st
+from openai import OpenAI
+
+api_key = os.getenv("FIREWORKS_API_KEY")
+
+if not api_key:
+    api_key = st.secrets["FIREWORKS_API_KEY"]
+
 client = OpenAI(
-    api_key=os.getenv("FIREWORKS_API_KEY"),
+    api_key=api_key,
     base_url="https://api.fireworks.ai/inference/v1"
 )
 
