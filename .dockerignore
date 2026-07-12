@@ -1,0 +1,12 @@
+venv/
+.venv/
+__pycache__/
+.git/
+.gitignore
+output/
+.env
+*.pyc
+*.pyo
+*.pyd
+.cache/
+models/

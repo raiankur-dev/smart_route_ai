@@ -1,108 +1,128 @@
-def classify(prompt: str) -> str:
+import re
+
+def classify(prompt: str):
     p = prompt.lower().strip()
 
+    scores = {
+        "CODE": 0,
+        "MATH": 0,
+        "SUMMARY": 0,
+        "SENTIMENT": 0,
+        "NER": 0,
+        "LOGIC": 0,
+        "FACTUAL": 0
+    }
+
     # ---------------- CODE ----------------
-    single_word_code = [
-        "python",
-        "java",
-        "c++",
-        "javascript",
-        "sql",
-        "code",
-        "coding",
-        "program",
-        "programming",
-        "debug",
-        "bug",
-        "compile",
-        "function",
-        "class",
-        "algorithm"
+
+    code_words = [
+        "python","java","c++","javascript","sql",
+        "function","class","algorithm","compile",
+        "debug","bug","implement","linked list",
+        "binary tree","write code","generate code"
     ]
 
-    multi_word_code = [
-        "linked list",
-        "binary tree",
-        "write code",
-        "generate code",
-        "implement"
-    ]
-
-    if any(word in p.split() for word in single_word_code):
-        return "CODE"
-
-    if any(phrase in p for phrase in multi_word_code):
-        return "CODE"
+    for word in code_words:
+        if word in p:
+            scores["CODE"] += 3
 
     # ---------------- MATH ----------------
-    if any(word in p for word in [
-        "calculate",
-        "solve",
-        "equation",
-        "integral",
-        "derivative",
-        "matrix",
-        "probability",
-        "statistics",
-        "quadratic",
-        "algebra",
-        "geometry",
-        "math",
-        "x²",
-        "x^2",
-        "=",
-        "+"
-    ]):
-        return "MATH"
+
+    math_words = [
+        "calculate","solve","equation",
+        "integral","derivative",
+        "matrix","probability",
+        "statistics","quadratic",
+        "geometry","algebra"
+    ]
+
+    for word in math_words:
+        if word in p:
+            scores["MATH"] += 3
+
+    if re.search(r"\d+\s*[\+\-\*/]\s*\d+", p):
+        scores["MATH"] += 3
+
+    if re.search(r"x[\^²]?", p):
+        scores["MATH"] += 2
 
     # ---------------- SUMMARY ----------------
-    if any(word in p for word in [
+
+    for word in [
         "summarize",
-        "summary",
         "summarise",
+        "summary",
         "tldr",
-        "shorten",
-        "condense"
-    ]):
-        return "SUMMARY"
+        "condense",
+        "shorten"
+    ]:
+        if word in p:
+            scores["SUMMARY"] += 3
 
     # ---------------- SENTIMENT ----------------
-    if any(word in p for word in [
+
+    for word in [
         "sentiment",
         "positive",
         "negative",
         "neutral",
-        "emotion"
-    ]):
-        return "SENTIMENT"
+        "emotion",
+        "review"
+    ]:
+        if word in p:
+            scores["SENTIMENT"] += 3
 
     # ---------------- NER ----------------
-    if any(word in p for word in [
+
+    for word in [
         "entity",
+        "entities",
+        "extract",
         "organization",
         "organisation",
         "location",
         "person",
-        "extract"
-    ]):
-        return "NER"
+        "date"
+    ]:
+        if word in p:
+            scores["NER"] += 3
 
     # ---------------- LOGIC ----------------
-    if any(word in p for word in [
-        "logic",
+
+    for word in [
+        "why",
+        "compare",
+        "difference",
         "reason",
         "reasoning",
+        "explain",
+        "analyse",
+        "analyze",
         "deduce",
-        "prove",
         "puzzle",
-        "riddle"
-    ]):
-        return "LOGIC"
+        "riddle",
+        "prove"
+    ]:
+        if word in p:
+            scores["LOGIC"] += 2
 
-    return "FACTUAL"
+    # Formatting requests are surprisingly difficult
+    if "exactly" in p:
+        scores["LOGIC"] += 2
 
+    if "bullet" in p:
+        scores["LOGIC"] += 2
 
-# if __name__ == "__main__":
-#     print(classify("What is the capital of France?"))
-#     print(classify("Solve the quadratic equation x²-5x+6=0"))
-#     print(classify("Write a Python function"))
+    if "step by step" in p:
+        scores["LOGIC"] += 2
+
+    # Long prompts are generally harder
+    if len(prompt.split()) > 120:
+        scores["LOGIC"] += 2
+
+    # If nothing else matches
+    scores["FACTUAL"] = 1
+
+    task = max(scores, key=scores.get)
+
+    return task, scores

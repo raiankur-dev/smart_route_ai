@@ -13,7 +13,10 @@ client = OpenAI(
 def ask_fireworks(prompt: str):
 
     response = client.chat.completions.create(
-        model=os.getenv("REMOTE_MODEL"),
+        model=os.getenv(
+            "REMOTE_MODEL",
+            "accounts/fireworks/models/deepseek-v4-pro"
+        ),
         messages=[
             {
                 "role": "user",
