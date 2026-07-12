@@ -1,6 +1,6 @@
 from classifier import classify
 from local_model import ask_local
-from fireworks_client import ask_fireworks
+from fireworks_client import ask_fireworks,get_remote_model
 
 LOCAL_MODEL = "LOCAL"
 REMOTE_MODEL = "REMOTE"
@@ -139,5 +139,6 @@ def route_prompt(prompt: str):
         "model": model,
         "task": task,
         "complexity": complexity,
-        "reason": reasons if reasons else ["Simple factual task"]
+        "reason": reasons if reasons else ["Simple factual task"],
+        "remote_model": get_remote_model()
     }

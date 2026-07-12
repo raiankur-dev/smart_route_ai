@@ -51,7 +51,8 @@ if st.button("🚀 Generate Response", use_container_width=True):
             if decision["model"] == "LOCAL":
                 st.metric("Chosen Model", "🟢 Local Qwen")
             else:
-                st.metric("Chosen Model", "🔴 DeepSeek")
+                model_name = decision["remote_model"].split("/")[-1]
+                st.metric("Chosen Model", f"🔴 {model_name}")
 
         st.markdown("---")
 

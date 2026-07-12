@@ -1,30 +1,30 @@
 #  Smart Route AI
 
-> Hybrid Token-Efficient LLM Router built for the **AMD Developer Hackathon ACT II – Track 1**
+> **A Hybrid Token-Efficient LLM Routing Agent built for the AMD Developer Hackathon ACT II – Track 1**
 
-Smart Route AI intelligently routes prompts to either a **local lightweight LLM (Qwen2.5-0.5B-Instruct)** or a **remote high-performance LLM (DeepSeek V4 Pro via Fireworks AI)** based on task complexity.
+Smart Route AI intelligently routes user prompts to either a **local lightweight LLM (Qwen2.5-0.5B-Instruct)** or a **Fireworks-hosted remote LLM** based on task complexity.
 
-Instead of sending every prompt to an expensive cloud model, the router performs lightweight task analysis and chooses the most suitable model, reducing inference cost while maintaining response quality.
+Instead of sending every request to a cloud model, Smart Route AI performs lightweight prompt analysis and automatically decides whether the task can be handled locally or requires a more capable remote model. This minimizes API token usage while maintaining high response quality.
 
 ---
 
-##  Live Demo
+#  Live Demo
 
-🌐 **Streamlit**
+### 🌐 Streamlit
 
 https://smartrouteai-abfp46dmaiemwjnupjht6k.streamlit.app/
 
 ---
 
-## 🐳 Docker
+# 🐳 Docker
 
-Docker Hub
+### Docker Hub
 
 ```
-noobmaster732/smart-route-ai:latest
+noobmaster732/smart-route-ai
 ```
 
-Pull image
+Pull the image
 
 ```bash
 docker pull noobmaster732/smart-route-ai:latest
@@ -40,14 +40,15 @@ docker run --env-file .env noobmaster732/smart-route-ai:latest
 
 # ✨ Features
 
-- Hybrid Local + Remote LLM Routing
-- Complexity-aware prompt classification
-- Local inference using Qwen2.5-0.5B
-- Remote inference using DeepSeek V4 Pro
-- Token-efficient architecture
-- Interactive Streamlit interface
-- Dockerized deployment
-- Automatic fallback mechanism
+- 🧠 Hybrid Local + Remote LLM Routing
+- ⚡ Complexity-aware prompt analysis
+- 💻 Local inference using Qwen2.5-0.5B-Instruct
+- ☁️ Remote inference using Fireworks AI
+- 💰 Token-efficient architecture
+- 🔄 Automatic routing decisions
+- 📊 Transparent routing explanation
+- 🌐 Interactive Streamlit interface
+- 🐳 Dockerized deployment
 
 ---
 
@@ -59,57 +60,53 @@ docker run --env-file .env noobmaster732/smart-route-ai:latest
 
 ---
 
-## Example 1 — Simple Factual Question
+## Example 1 – Simple Factual Question
 
 Prompt
 
-```
+```text
 What is the capital of France?
 ```
 
 ### Routing Decision
 
 - Task Type: FACTUAL
-- Complexity: 0/10
-- Model: Local Qwen
+- Complexity Score: 0
+- Selected Model: Local Qwen
 
 ![Local Routing](images/local-routing.png)
 
-Simple factual prompts remain on the local model, eliminating unnecessary API calls.
+Simple factual prompts remain on the local model, eliminating unnecessary API usage.
 
 ---
 
-## Example 2 — Programming Task
+## Example 2 – Programming Task
 
 Prompt
 
-```
-Give Python code to reverse a linked list.
+```text
+Write a Python function to reverse a linked list.
 ```
 
 ### Routing Decision
 
 - Task Type: CODE
-- Complexity: 4/10
-- Model: DeepSeek V4 Pro
+- Complexity Score: 4
+- Selected Model: Fireworks-hosted LLM
 
 ![Remote Routing](images/remote-routing.png)
 
-Programming tasks require stronger reasoning and therefore are automatically routed to the remote model.
+Programming tasks require stronger reasoning and are therefore routed to the remote model.
 
 ---
 
 ## Generated Response
 
-The remote model returns complete working code.
-
-![Response](images/remote-response.png)
+![Remote Response](images/remote-response.png)
 
 ---
 
 ## Generated Output
-
-The returned implementation includes documentation, examples and complexity analysis.
 
 ![Output](images/code-output.png)
 
@@ -117,39 +114,39 @@ The returned implementation includes documentation, examples and complexity anal
 
 ## Code Preview
 
-![Code](images/code-snippet.png)
+![Code Preview](images/code-snippet.png)
 
 ---
 
 #  Architecture
 
 ```
-                  User Prompt
-                       │
-                       ▼
-              Task Classification
-                       │
-                       ▼
-             Complexity Estimation
-                       │
-                       ▼
-             Intelligent Router
-          ┌────────────┴────────────┐
-          │                         │
-          ▼                         ▼
- Local Qwen2.5-0.5B         DeepSeek V4 Pro
- (Local CPU Inference)     (Fireworks AI API)
-          │                         │
-          └────────────┬────────────┘
-                       ▼
-                Final Response
+                     User Prompt
+                          │
+                          ▼
+                 Prompt Classification
+                          │
+                          ▼
+                Complexity Estimation
+                          │
+                          ▼
+                  Intelligent Router
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+     Local Qwen2.5-0.5B         Fireworks AI Hosted LLM
+       (CPU Inference)             (Remote Inference)
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                    Final Response
 ```
 
 ---
 
-#  Routing Strategy
+# ⚙️ Routing Strategy
 
-The router computes a lightweight complexity score using multiple heuristics.
+The routing engine computes a lightweight complexity score using prompt characteristics.
 
 Factors considered include:
 
@@ -159,28 +156,30 @@ Factors considered include:
 - Prompt length
 - Formatting constraints
 
-| Prompt Type | Selected Model |
-|-------------|----------------|
+| Prompt Type | Routed To |
+|--------------|-----------|
 | Factual Questions | 🟢 Local |
-| Short Summaries | 🟢 Local |
+| Summarization | 🟢 Local |
 | Named Entity Recognition | 🟢 Local |
 | Sentiment Analysis | 🟢 Local |
 | Code Generation | 🔴 Remote |
 | Mathematical Problems | 🔴 Remote |
-| Complex Reasoning | 🔴 Remote |
+| Logical Reasoning | 🔴 Remote |
+
+During hackathon evaluation, the application automatically uses the model(s) provided through the **`ALLOWED_MODELS`** environment variable, ensuring compatibility with the official evaluation harness.
 
 ---
 
-# 📂 Project Structure
+# 📁 Project Structure
 
 ```
 smart_route_ai/
-
-│── app.py
-│── Dockerfile
-│── requirements.txt
-│── README.md
-
+│
+├── app.py
+├── Dockerfile
+├── requirements.txt
+├── README.md
+│
 ├── src/
 │   ├── main.py
 │   ├── router.py
@@ -188,13 +187,19 @@ smart_route_ai/
 │   ├── local_model.py
 │   ├── fireworks_client.py
 │   └── config.py
-
+│
 ├── input/
 │   └── tasks.json
-
+│
 ├── output/
-
+│
 ├── images/
+│   ├── home.png
+│   ├── local-routing.png
+│   ├── remote-routing.png
+│   ├── remote-response.png
+│   ├── code-output.png
+│   └── code-snippet.png
 ```
 
 ---
@@ -205,17 +210,16 @@ smart_route_ai/
 - Streamlit
 - Hugging Face Transformers
 - Qwen2.5-0.5B-Instruct
-- DeepSeek V4 Pro
 - Fireworks AI
-- Docker
 - OpenAI SDK
+- Docker
 - PyTorch
 
 ---
 
 #  Running Locally
 
-Clone
+Clone the repository
 
 ```bash
 git clone https://github.com/raiankur-dev/smart_route_ai.git
@@ -223,34 +227,70 @@ git clone https://github.com/raiankur-dev/smart_route_ai.git
 cd smart_route_ai
 ```
 
-Install
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Create `.env`
+Create a `.env`
 
-```
+```text
 FIREWORKS_API_KEY=YOUR_FIREWORKS_API_KEY
+
+FIREWORKS_BASE_URL=https://api.fireworks.ai/inference/v1
+
 HF_TOKEN=YOUR_HUGGINGFACE_TOKEN
 ```
 
-Run
+Run the Streamlit application
 
 ```bash
 streamlit run app.py
 ```
 
+Run the CLI version
+
+```bash
+python src/main.py
+```
+
+> **Note:** During local development, the application defaults to a Fireworks-hosted model when `ALLOWED_MODELS` is not provided. During hackathon evaluation, the runtime automatically uses the model IDs supplied through the `ALLOWED_MODELS` environment variable.
+
+---
+
+#  Example Routing
+
+| Prompt | Selected Model |
+|---------|----------------|
+| What is the capital of France? | 🟢 Local |
+| Summarize Artificial Intelligence in one sentence. | 🟢 Local |
+| Write a Python function to reverse a linked list. | 🔴 Remote |
+| Solve x² − 5x + 6 = 0 | 🔴 Remote |
+
+---
+
+#  Key Highlights
+
+- Intelligent Hybrid Routing
+- Token-Efficient Inference
+- Automatic Local/Remote Model Selection
+- Compatible with AMD Evaluation Harness
+- Dockerized Deployment
+- Public Streamlit Demo
+- Public Docker Hub Image
+- Explainable Routing Decisions
+
 ---
 
 #  Future Improvements
 
-- ML-based routing instead of heuristic rules
-- Adaptive routing using confidence estimation
-- Cost-aware dynamic routing
-- Multi-model support
-- Benchmarking on larger evaluation datasets
+- Machine learning–based routing instead of heuristic rules
+- Confidence-aware routing
+- Dynamic token cost estimation
+- Multi-model remote selection
+- Automatic benchmarking
+- Adaptive routing based on historical performance
 
 ---
 
@@ -258,10 +298,10 @@ streamlit run app.py
 
 Developed for the **AMD Developer Hackathon ACT II – Track 1**
 
-Team Name: **(Add your team name here)**
+**Team:** *<Your Team Name>*
 
 ---
 
 #  License
 
-This project was developed for the AMD Developer Hackathon ACT II.
+This project was developed as part of the **AMD Developer Hackathon ACT II**.
